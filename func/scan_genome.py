@@ -64,7 +64,7 @@ if __name__ == '__main__':
     args.add_argument('--parameter_choice', type=str, default='RU_2')
     args.add_argument('--start_end', type=str, default='start')
     args.add_argument('--dropout', type=float, default=0.1)
-    args.add_argument('--seq_len', type=int, default=1500)
+    args.add_argument('--seq_len', type=int, default=1600)
     args.add_argument('--batch_size', type=int, default=1024)
     args.add_argument('--num_workers', type=int, default=8)
     args.add_argument('--threshold', type=float, default=0.8)

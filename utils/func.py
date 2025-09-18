@@ -371,5 +371,51 @@ def need_metric(train_acc, train_recall, train_pr, train_f1, val_acc):
         return False
 
 
+def find_parquet_files(root_dir):
+    parquet_files = []
+    for root, dirs, files in os.walk(root_dir):
+        for file in files:
+            if file.endswith('.parquet'):
+                parquet_files.append(os.path.join(root, file))
+    return parquet_files
 
+
+normal_order = ['chr1', 'chr2', 'chr3', 'chr4', 'chr5', 'chr6', 'chr7', 'chr8', 'chr9',
+                     'chr10', 'chr11', 'chr12', 'chr13', 'chr14', 'chr15', 'chr16', 'chr17',
+                     'chr18', 'chr19', 'chr20', 'chr21', 'chr22', 'chrX', 'chrY']
+
+def combined_all(file_paths):
+    all_sub_dfs = []
+
+    for file_path in file_paths:
+
+        file_name = os.path.basename(file_path)
+        chr_ = file_name.split('_')[1]
+
+        file_df = pd.read_parquet(file_path)
+        file_df['site'] = np.arange(len(file_df))
+        file_df = file_df[file_df['probs'] > 0.95]
+
+        site_hg38 = file_df['site'] + 750
+        chr_hg38 = np.full(len(file_df), chr_)
+
+        sub_df = pd.DataFrame({
+            'chr_hg38': chr_hg38,
+            'site_hg38': site_hg38,
+            'probs': file_df['probs'].values  
+        })
+
+        all_sub_dfs.append(sub_df)
+
+    new_df = pd.concat(all_sub_dfs, axis=0, ignore_index=True)
+    
+    new_df['chr_hg38'] = pd.Categorical(
+        new_df['chr_hg38'],
+        categories=normal_order,
+        ordered=True
+    )
+    new_df = new_df.sort_values(['chr_hg38', 'site_hg38'])
+    new_df = new_df.reset_index(drop=True)
+
+    return new_df
 

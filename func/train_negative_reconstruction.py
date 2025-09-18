@@ -5,7 +5,7 @@ import utils
 import models
 from models import *
 from . import train
-from. import valid
+from . import valid
 
 seed = 42
 random.seed(seed)
@@ -25,7 +25,20 @@ def train_model_negative_reconstruction(args):
     net = models.BreakModel(seq_len=args.seq_len, num_classes=1, parameter=args.parameter_choice,
                             dropout_rate=args.dropout)
 
-    test_data_file = args.neg_file_list
+    test_data_file = [
+        f'./data/repeat/cancer_cell_line_{args.seq_len}_f_0.csv',
+        f'./data/repeat/cancer_cell_line_{args.seq_len}_f_1.csv',
+        f'./data/repeat/cancer_cell_line_{args.seq_len}_f_2.csv',
+        f'./data/repeat/cancer_cell_line_{args.seq_len}_f_3.csv',
+        f'./data/repeat/cancer_cell_line_{args.seq_len}_f_4.csv',
+        f'./data/repeat/cancer_cell_line_{args.seq_len}_f_5.csv',
+        f'./data/repeat/cancer_cell_line_{args.seq_len}_f_6.csv',
+        f'./data/repeat/cancer_cell_line_{args.seq_len}_f_7.csv',
+        f'./data/repeat/cancer_cell_line_{args.seq_len}_f_8.csv',
+        f'./data/repeat/cancer_cell_line_{args.seq_len}_f_9.csv',
+
+    ]
+
     for i in range(10):
         train_acc, train_recall, train_pr, train_f1 = train.train_model(net, train_dataset, epochs=args.epochs, lr=args.lr, wd=args.wd, smoothing=args.smoothing, threshold=args.threshold,
                                                                         val_split=args.val_split, batch_size=args.batch_size, save=args.save, show=args.show, device=args.device,
@@ -53,22 +66,23 @@ if __name__ == '__main__':
     args = argparse.ArgumentParser()
     args.add_argument('--pos_data', type=str, default=' ')
     args.add_argument('--neg_data', type=str, default=' ')
-    args.add_argument('--neg_file_list', type=str, default=' ')
+    args.add_argument('--test_data', type=str, default=' ')
     args.add_argument('--start_end', type=str, default='start')
-    args.add_argument('--seq_len', type=int, default=1500)
-    args.add_argument('--parameter_choice', type=str, default='RU_2')
-    args.add_argument('--epochs', type=int, default=30)
     args.add_argument('--batch_size', type=int, default=10240)
     args.add_argument('--lr', type=float, default=1e-3)
     args.add_argument('--wd', type=float, default=0)
-    args.add_argument('--pos_weight', type=float, default=None)
     args.add_argument('--smoothing', type=float, default=0.1)
-    args.add_argument('--dropout', type=float, default=0.2)
     args.add_argument('--threshold', type=float, default=0.5)
     args.add_argument('--val_split', type=float, default=0.2)
+    args.add_argument('--epochs', type=int, default=200)
     args.add_argument('--save', action='store_true')
     args.add_argument('--show', action='store_true')
+    args.add_argument('--parallel', action='store_true')
     args.add_argument('--device', type=str, default='cpu')
+    args.add_argument('--seq_len', type=int, default=1600)
+    args.add_argument('--parameter_choice', type=str, default='RU_2')
+    args.add_argument('--dropout', type=float, default=0.1)
+    args.add_argument('--pos_weight', type=float, default=None)
 
 
     args = args.parse_args()

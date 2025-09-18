@@ -72,7 +72,7 @@ if __name__ == '__main__':
     args.add_argument('--neg_file_list', type=str, default=None)
     args.add_argument('--neg_threshold', type=float, default=0.5)
     args.add_argument('--start_end', type=str, default='start')
-    args.add_argument('--seq_len', type=int, default=1500)
+    args.add_argument('--seq_len', type=int, default=1600)
     args.add_argument('--joint', action='store_true')
     args.add_argument('--parameter_choice', type=str, default='RU_2')
     args.add_argument('--epochs', type=int, default=200)

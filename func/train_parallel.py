@@ -120,7 +120,6 @@ def train(model, train_loader, optimizer, criterion, rank, epoch, args):
 
         local_losses.append(loss.item())
         prob = torch.sigmoid(output)
-        # pred = (prob > args.threshold)
         pred = (prob > threshold_tensor)
         local_probs.append(prob)
         local_preds.append(pred)
@@ -175,14 +174,9 @@ def main_worker(rank, world_size, args):
     setup(rank, world_size)
     logger = utils.SafeLogger(args)
     if rank == 0:
-        # utils.setup_logging(args.dir_name, args.dir_time)
-        # utils.record_parameter(args)
-        # utils.record_content('The Training is Starting')
         logger.log(logging.INFO, 'The Training is Starting')
     model = get_model(args, rank)
     optimizer = optim.AdamW(model.parameters(), lr=args.lr, weight_decay=args.wd)
-    # optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.wd)
-    # scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=20, gamma=0.8)
     if args.pos_weight is not None:
         pos_weight = torch.tensor([args.pos_weight], device=torch.cuda.current_device())
         criterion = nn.BCEWithLogitsLoss(pos_weight=pos_weight)
@@ -206,15 +200,12 @@ def main_worker(rank, world_size, args):
                                                                                     criterion, rank, epoch, args)
         val_loss_mean, val_all_probs, val_all_preds, val_all_targets = evaluate(model, val_loader, criterion,
                                                                                         rank, epoch, args)
-        # scheduler.step()
         if rank == 0:
             cpu_data = prepare_for_thread(epoch,
                 train_loss_mean, val_loss_mean,
                 train_all_targets, train_all_preds,
                 val_all_targets, val_all_preds
             )
-            # metrics_executor.submit(safe_submit, utils.show_metrics, *cpu_data)
-            # metrics_contents = utils.show_metrics(epoch, train_loss_mean, val_loss_mean, train_all_targets, train_all_preds, val_all_targets, val_all_preds)
             metrics_contents = utils.show_metrics(*cpu_data)
             utils.record_multi(logger, metrics_contents)
 
@@ -223,10 +214,8 @@ def main_worker(rank, world_size, args):
                 val_all_targets, val_all_probs, args.threshold, args.save_path,
                 args.dir_name, args.dir_time
             )
-            metrics_executor.submit(safe_submit,utils.save_prob_distribution, *cpu_probs)
-            # utils.save_prob_distribution(epoch, train_all_targets, train_all_probs, val_all_targets, val_all_probs, args.threshold)
+            # metrics_executor.submit(safe_submit,utils.save_prob_distribution, *cpu_probs)
             if epoch % 10 == 0 :
-                # utils.record_content(f"LR: {optimizer.param_groups[0]['lr']}")
                 logger.log(logging.INFO, f"LR: {optimizer.param_groups[0]['lr']}")
 
             if val_loss_mean < best_val_loss - min_delta:
@@ -234,12 +223,11 @@ def main_worker(rank, world_size, args):
                 best_model_state_dict = model.module.state_dict()
                 best_epoch = epoch
                 no_improve_count = 0
-                metrics_executor.submit(safe_submit, utils.save_prob_records, *cpu_probs)
+                # metrics_executor.submit(safe_submit, utils.save_prob_records, *cpu_probs)
             else:
                 no_improve_count += 1
 
                 if no_improve_count >= patience:
-                    # utils.record_content('Reached patience, stop training')
                     logger.log(logging.INFO, 'Reached patience, stop training')
                     early_stop.fill_(1)
         dist.broadcast(early_stop, src=0)

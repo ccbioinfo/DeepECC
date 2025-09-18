@@ -1,5 +1,4 @@
 # DeepECC: A Deep Learning Framework for Whole-Genome Identification and Analysis of Human Cancer eccDNAs
-#
 ![](./data/Fig_main.png)
 ## Usage
 ### Data preparation
@@ -51,7 +50,7 @@ Running the 'model_train_stage1.ipynb'
 
 the main function is 
 ```angular2html
-!python train_negative_reconstruction_parallel.py \
+!python -m func.train_negative_reconstruction_parallel \
     --pos_data {pos_data} \
     --neg_data {neg_data} \
     --neg_file_list {neg_file_list} \
@@ -77,7 +76,7 @@ the main function is
 Running the 'model_stage1_scan_genome.ipynb'
 the main function is 
 ```angular2html
-!python func/scan_genome.py \
+!python -m func.scan_genome \
     --genome_file {genome_file} \
     --parameter_path {parameter_path} \
     --parameter_choice {parameter_choice} \
@@ -98,7 +97,7 @@ Running the 'model_train_stage2.ipynb'
 
 the main function is 
 ```angular2html
-!python train_paralle.py \
+!python -m func.train_parallel \
     --pos_data {pos_data} \
     --neg_data {neg_data} \
     --start_end {start_end} \
@@ -124,8 +123,8 @@ Running the 'model_stage2_score_genome.ipynb'
 
 the main function is 
 ```angular2html
-!python predict_joint.py \
-    --joint_files {joint_files} \
+!python -m func.predict_joint \
+    --joint_file {joint_file} \
     --genome_file {genome_file} \
     --parameter_path {parameter_path} \
     --chr {chr} \

@@ -112,7 +112,7 @@ def main_worker_fold_valid(rank, world_size, args):
                                                                args.dir_name, args.dir_time
                                                                )
 
-                metrics_executor.submit(train_parallel.safe_submit, utils.save_prob_distribution, *cpu_probs)
+                # metrics_executor.submit(train_parallel.safe_submit, utils.save_prob_distribution, *cpu_probs)
                 if epoch % 10 == 0 :
                     logger.log(logging.INFO, f"LR: {optimizer.param_groups[0]['lr']}")
 
@@ -121,7 +121,7 @@ def main_worker_fold_valid(rank, world_size, args):
                     best_model_state_dict = model.module.state_dict()
                     best_epoch = epoch
                     no_improve_count = 0
-                    metrics_executor.submit(train_parallel.safe_submit, utils.save_prob_records_, *cpu_probs_)
+                    # metrics_executor.submit(train_parallel.safe_submit, utils.save_prob_records_, *cpu_probs_)
                 else:
                     no_improve_count += 1
 
@@ -152,7 +152,7 @@ if __name__ == '__main__':
     args.add_argument('--pos_data', type=str, default=' ')
     args.add_argument('--neg_data', type=str, default=' ')
     args.add_argument('--start_end', type=str, default='start')
-    args.add_argument('--seq_len', type=int, default=1500)
+    args.add_argument('--seq_len', type=int, default=1600)
     args.add_argument('--joint', action='store_true')
     args.add_argument('--parameter_choice', type=str, default='RU_2')
     args.add_argument('--epochs', type=int, default=200)

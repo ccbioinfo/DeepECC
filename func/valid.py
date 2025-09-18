@@ -17,6 +17,8 @@ from datetime import datetime
 
 import models
 import utils
+# from utils import *
+# from models import *
 from . import train
 
 
@@ -57,12 +59,14 @@ def valid_model(model, dataset, parameter_path, threshold=0.5, batch_size=2048, 
     val_acc, val_recall, val_precision, val_f1, val_mcc = utils.compute_metrics(valid_true_label,
                                                                             valid_predict_label)
 
+    # print(f' Val Acc: {val_acc:.4f}, Val Recall: {val_recall:.4f}, '
+    #       f'Val PR: {val_precision:.4f}, Val F1: {val_f1:.4f}')
     metric_content = utils.show_metrics_valid(val_acc, val_recall, val_precision, val_f1, val_mcc)
     if logger is not None:
         logger.log(logging.INFO, metric_content)
 
-    utils.save_prob_distribution_valid(valid_true_label, valid_probs, threshold,
-                                 save_path=args.save_path, dir_name=args.dir_name, dir_time=args.dir_time)
+    # utils.save_prob_distribution_valid(valid_true_label, valid_probs, threshold,
+    #                              save_path=args.save_path, dir_name=args.dir_name, dir_time=args.dir_time)
 
     if df:
         if neg_threshold is not None:

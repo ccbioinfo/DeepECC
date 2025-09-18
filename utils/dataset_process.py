@@ -401,23 +401,22 @@ def generate_pure_random_data(counts=500000, species='human', seed=42):
     return out_df
 
 
-def shuffle_positive_data(pos_path):
-    if pos_path.endswith('.csv'):
-        eccDNA_raw_data = pd.read_csv(pos_path)
-    else:
-        eccDNA_raw_data = pd.read_table(pos_path, sep=' ')
+def shuffle_positive_data(df):
+    df_group = df.groupby('chr_hg38')
+    new_df_group = []
 
-    pos_data_0 = eccDNA_raw_data[['eccid', 'chr_hg38',  'Length', 'ac_number']]
-    pos_data_1 = eccDNA_raw_data[['start_hg38', 'around_start']]
-    pos_data_2 = eccDNA_raw_data[['end_hg38', 'around_end']]
+    for _, sub_df in df_group:
+        sub_df_0 = sub_df[['eccid', 'chr_hg38', 'Length', 'ac_number']]
+        sub_df_1 = sub_df[['start_hg38', 'around_start']].sample(frac=1, random_state=42).reset_index(drop=True)
+        sub_df_2 = sub_df[['end_hg38', 'around_end']].sample(frac=1, random_state=52).reset_index(drop=True)
 
-    pos_data_1 = pos_data_1.sample(frac=1).reset_index(drop=True)
-    pos_data_2 = pos_data_2.sample(frac=1).reset_index(drop=True)
+        sub_df_ = pd.concat([sub_df_0.reset_index(drop=True), sub_df_1, sub_df_2], axis=1)
+        new_df_group.append(sub_df_)
 
-    eccDNA_raw_data = pd.concat([pos_data_0, pos_data_1, pos_data_2], axis=1)
-    eccDNA_raw_data = eccDNA_raw_data[['eccid', 'chr_hg38', 'start_hg38', 'end_hg38', 'Length', 'ac_number',
-                             'around_start', 'around_end']]
-    return eccDNA_raw_data
+    new_df = pd.concat(new_df_group, axis=0)
+    new_df = new_df[['eccid', 'chr_hg38', 'start_hg38', 'end_hg38', 'Length', 'ac_number',
+                     'around_start', 'around_end']]
+    return new_df
 
 
 
