@@ -4,8 +4,8 @@ import os.path
 import utils
 import models
 from models import *
-import train
-import valid
+from . import train
+from. import valid
 
 seed = 42
 random.seed(seed)

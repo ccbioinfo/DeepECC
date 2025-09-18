@@ -7,7 +7,7 @@ from torch.nn.parallel import DataParallel
 import utils
 import models
 from models import *
-import valid
+from . import valid
 import datetime
 
 

@@ -17,7 +17,7 @@ import torch.multiprocessing as mp
 
 import utils
 import models
-import valid
+from . import valid
 
 
 seed = 42

@@ -16,7 +16,7 @@ import torch.multiprocessing as mp
 from sklearn.model_selection import KFold
 
 import utils
-import train_parallel
+from . import train_parallel
 
 seed = 42
 random.seed(seed)

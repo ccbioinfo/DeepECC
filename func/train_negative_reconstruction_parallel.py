@@ -3,7 +3,7 @@ import pandas as pd
 import glob
 import time
 
-from train_parallel import *
+from .train_parallel import *
 
 seed = 42
 random.seed(seed)

@@ -17,9 +17,7 @@ from datetime import datetime
 
 import models
 import utils
-# from utils import *
-# from models import *
-import train
+from . import train
 
 
 def valid_model(model, dataset, parameter_path, threshold=0.5, batch_size=2048, device='cpu', args=None, logger=None, df=False, parallel=False, neg_threshold=None,):
