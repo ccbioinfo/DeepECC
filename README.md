@@ -1,5 +1,9 @@
 # DeepECC: A Deep Learning Framework for Whole-Genome Identification and Analysis of Human Cancer eccDNAs
 ![](./data/Fig_main.png)
+
+## Finally results display on UCSC genome browser
+https://genome.ucsc.edu/s/ccbioinfo/EccDNA_Hub
+
 ## Usage
 ### Data preparation
 Running the 'data_prepare.ipynb'
